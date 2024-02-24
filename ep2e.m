@@ -31,16 +31,27 @@
 (* Physics *)
 
     gEarth = Quantity[9.8,"Meters"]/Times[Quantity[1,"Seconds"],Quantity[1,"Seconds"]];
-    (*leakPressureLoss[volume_,leakSurfaceArea_,time_]:=*)
+    leakPressureLoss[leakSurfaceArea_,volume_,seconds_]:=Quantity[1,"Atmospheres"]*(1-((leakSurfaceArea*Quantity[343,"Meters"])/volume))^(seconds)
 
 (*
 With[{date = DateObject[{2023, 12, 1}],vP=Times[1/10,Quantity[1,"SpeedOfLight"]]}, distance = AstroDistance[Entity["Planet", "Jupiter"], {Entity["Planet", "Earth"], date}]; {{"time[C]", UnitConvert[distance/Quantity[1, "SpeedOfLight"], MixedUnit[{"Days", "Hours", "Minutes", "Seconds"}]]},{"time[vPhysical]",UnitConvert[distance/vP, MixedUnit[{"Days", "Hours", "Minutes", "Seconds"}]]}}]
 
 With[{date = DateObject[{2023, 12, 1}],vP=Quantity[17000,"Meters"]/Quantity[1,"Seconds"]}, distance = AstroDistance[Entity["Planet", "Jupiter"], {Entity["Planet", "Earth"], date}]; {{"time[C]", UnitConvert[distance/Quantity[1, "SpeedOfLight"], MixedUnit[{"Days", "Hours", "Minutes", "Seconds"}]]},{StringJoin[{"time[",ToString[vP],"]"}],UnitConvert[distance/vP, MixedUnit[{"Days", "Hours", "Minutes", "Seconds"}]]}}]
+
+AstroDistance[Entity["Planet", "Jupiter"], 
+  Entity["Planet", "Earth"],{}]
+
+AstroPosition[Entity["Planet", "Jupiter"],DateObject[{2010,01,01}]]
+AstroPosition[Entity["Planet", "Jupiter"],{"Galactic","Date"->DateObject[{2010,01,01}]}] (* Galactic seems to be sun-centered, just plane aligned with the Galactic *)
+
+Table[{m,AstroPosition[Entity["Planet", "Earth"],{"Galactic","Date"->DateObject[{2010,m,01}]}]},{m,1,12}] (* seems to indicate that the azimuth is just degrees, which is nice. The Jupiter trojans are 60 degrees of from Jupiter *)
+
 *)
 
 (* EGR Functions *)
     egrName[n_] := StringJoin[{"EGR_", ToString[N[E, n]]}]; (* name of EGR version n, with versions lesser than 3 making no sense, and lesser than 6 only very little as they are retired to archive *)
     egrFork[source_, n_] := StringJoin[{source, ".", ToString[n]}]; (* source name and nth fork from this source*)
+
+    egr = egrName[6];
 
 Print["ep2e.m loaded"];
